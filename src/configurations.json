@@ -1,0 +1,8 @@
+{
+    "loggingName": "test_run",
+    "runNumber": "2",
+    "dataPath": "../data/raw/",
+    "outputFigPath": "../outputs/learning-curves/",
+    "outputValPath": "../outputs/model-validations/",
+    "outputModelPath": "../outputs/saved-models/"
+}
