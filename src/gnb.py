@@ -103,7 +103,6 @@ class GaussianNaiveBayes():
         # Model metrics
         self.cm = sklearn.metrics.confusion_matrix(valLabels, self.pred)
         self.accuracy = round((sum(np.diagonal(self.cm)) / len(self.pred)), 4)
-        print("Validation accuracy:", round((sum(np.diagonal(self.cm)) / len(self.pred)) * 100, 4), '%')
         
         return None
     

@@ -62,12 +62,26 @@ class TestGaussianNaiveBayes(unittest.TestCase):
     def test_save_model(self):
         # Test save model by checking if it runs without errors (actual file writing could be mocked)
         self.model.run(self.trainImages, self.trainLabels, self.valImages, self.valLabels)
-        self.model.saveModel('test_model_save.txt')
+        file = 'test_model_save.txt'
+        self.model.saveModel(file)
+        try:
+            os.remove(file)
+            print(f"Deleted {file} after test.")
+        except OSError as e:
+            print(f"Error: {e.strerror}")
 
     def test_save_validation(self):
         # Test save validation by checking if it runs without errors
         self.model.run(self.trainImages, self.trainLabels, self.valImages, self.valLabels)
-        self.model.saveValidation('test_validation_save.txt')
+        file = 'test_validation_save.txt'
+        self.model.saveValidation(file)
+        try:
+            os.remove(file)
+            print(f"Deleted {file} after test.")
+        except OSError as e:
+            print(f"Error: {e.strerror}")
 
 if __name__ == '__main__':
+    
+    # Run unit test
     unittest.main()
