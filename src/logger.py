@@ -1,5 +1,6 @@
 #=============================================================================
 # Programme: 
+# logging functions for running the main programme
 #=============================================================================
 
 #=============================================================================
@@ -16,7 +17,7 @@ def logProgress(message: str, format: str = "%d %b %Y %H:%M:%S: "):
     """
     Prints a log message prefixed with the current datetime formatted according to the provided format string
 
-    Parameters:
+    Args:
     - message (str): The log message to be printed
     - format (str, optional): The datetime format string. Defaults to "%d %b %Y %H:%M:%S: "
 
