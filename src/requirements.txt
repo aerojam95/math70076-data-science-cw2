@@ -11,3 +11,4 @@ torchtext==0.16.0
 torchdata==0.7.0
 torchinfo==1.8.0
 git+https://github.com/bayesiains/nflows@master
+tqdm==4.66.2

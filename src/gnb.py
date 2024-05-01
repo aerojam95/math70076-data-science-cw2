@@ -9,9 +9,10 @@
 
 # Standard modules
 import numpy as np
-import sklearn.metrics 
+from  sklearn.metrics import confusion_matrix
 import sklearn.model_selection
 import sklearn.preprocessing
+from tqdm import tqdm
 
 # Custom modules
 
@@ -55,6 +56,8 @@ class GaussianNaiveBayes():
         self.pred        = []
         self.likelihood  = []
         self.lcs         = []
+        self.cm          = None
+        self.accuracy    = None
         
     def run(self, trainImages, trainLabels, valImages, valLabels):
         """
@@ -77,7 +80,7 @@ class GaussianNaiveBayes():
         self.valLabels  = valLabels
         
         # Training data for model parameteres
-        for category in self.classes:
+        for category in tqdm(self.classes, desc="Training Progress"):
             sep = self.trainLabels == category
             self.count.append(np.sum(sep))
             self.prior.append(np.mean(sep))
@@ -101,7 +104,7 @@ class GaussianNaiveBayes():
             self.lcs.append(classifier)
         
         # Model metrics
-        self.cm = sklearn.metrics.confusion_matrix(valLabels, self.pred)
+        self.cm = confusion_matrix(valLabels, self.pred)
         self.accuracy = round((sum(np.diagonal(self.cm)) / len(self.pred)), 4)
         
         return None
@@ -136,5 +139,8 @@ class GaussianNaiveBayes():
             None
         """
         with open(filename, 'w') as file:
-            file.write(f'Accuracy: {self.accuracy * 100:.2f}%\n')
+            try:
+                file.write(f'Accuracy: {self.accuracy * 100:.2f}%\n')
+            except OSError as e:
+                print(f"Error: {e.strerror}")
         return None

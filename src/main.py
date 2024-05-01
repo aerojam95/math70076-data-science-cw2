@@ -18,6 +18,7 @@ import os
 from logger import logProgress
 from data_loader import loadImages, loadLabels
 from gnb import GaussianNaiveBayes
+from knn  import kNearestNeighbours
 
 #=============================================================================
 # Functions
@@ -110,14 +111,28 @@ if __name__ == "__main__":
     GNB.run(trainImages, trainLabels, testImages, testLabels)
     logProgress("Naive-Bayes completed")
     
-    GNB.saveModel(f"{outputModelPath}naive_bayes_model_parameters_{runNumber}.txt")
+    GNB.saveModel(f"{outputModelPath}{runNumber}_naive_bayes_model_parameters_.txt")
     logProgress("Naive-Bayes model saved")
 
-    GNB.saveValidation(f"{outputValPath}naive_bayes_validation_results_{runNumber}.txt")
+    GNB.saveValidation(f"{outputValPath}{runNumber}_naive_bayes_validation_results.txt")
     logProgress("Naive-Bayes validation accuracy saved")
     
     
     # k-Nearest neighbours
+    logProgress("Training k-Nearest neighbours...")
+    kNN = kNearestNeighbours(k=1, nSplits=10)
+    kNN.train(f"{outputFigPath}{runNumber}_", trainImages, trainLabels, kmin=1, kmax=20)
+    logProgress("k-Nearest neighbours training completed")
+    
+    logProgress("Validating k-Nearest neighbours...")
+    kNN.evaluate(testImages, testLabels)
+    logProgress("k-Nearest neighbours validation completed")
+    
+    kNN.saveModel(f"{outputModelPath}{runNumber}_knn_model_parameters_.txt")
+    logProgress("k-Nearest neighbours model saved")
+
+    kNN.saveValidation(f"{outputValPath}{runNumber}_knn_validation_results.txt")
+    logProgress("k-Nearest neighbours validation accuracy saved")
     
     # Neural Network
     
