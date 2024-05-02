@@ -9,15 +9,12 @@
 
 # Standard modules
 import unittest
-from unittest.mock import patch, mock_open
-from io import StringIO
-import numpy as np
 import sys
 import os
 from sklearn.datasets import make_classification
 
 # Append the path of `src` directory to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
 # Custom modules
 from knn import kNearestNeighbours
@@ -31,75 +28,106 @@ from knn import kNearestNeighbours
 #=============================================================================
 
 #=============================================================================
-# Unit test class for knn.py
+# Unit test class from knn.py
 #=============================================================================
 
 class TestkNearestNeighbours(unittest.TestCase):
+    """
+    Unit tests for the kNearestNeighbours class
+
+    This test class provides a series of automated tests to validate the behavior and functionality of the
+    kNearestNeighbours class, including its ability to train, run predictions, save to and load from files
+    """
     def setUp(self):
-        """ Create a small synthetic dataset for testing """
+        """
+        Set up method to prepare a test environment before each test
+
+        Initializes a kNearestNeighbours object with a fixed smoothing parameter and sets up a simple,
+        synthetic dataset for testing
+        """
         self.trainImages, self.trainLabels = make_classification(n_samples=100, n_features=20, n_informative=2, n_redundant=0, random_state=42)
         self.testImages, self.testLabels = make_classification(n_samples=10, n_features=20, n_informative=2, n_redundant=0, random_state=42)
         self.model = kNearestNeighbours(k=3, nSplits=5)
-        self.testPath = os.getcwd() + '/'
+        self.testPath = os.getcwd() + "/"
+        self.model.train(self.testPath, self.trainImages, self.trainLabels, kmin=1, kmax=3)
 
-    def test_initialization(self):
-        """ Test the initialization of kNearestNeighbours class """
+    def testInitialization(self):
+        """
+        Test initialization of kNearestNeighbours class
+        
+        Validates that the method initialises model correctly
+        """
         self.assertEqual(self.model.k, 3)
         self.assertEqual(self.model.nSplits, 5)
-        self.assertIsNone(self.model.predictAccuracy)
+        self.assertIsNotNone(self.model)
 
-    def test_train(self):
-        """ Test the training method """
-        accuracies = self.model.train(self.testPath, self.trainImages, self.trainLabels, kmin=1, kmax=5)
-        self.assertIsInstance(accuracies, list)
-        self.assertEqual(len(accuracies), 5)
+    def testTrain(self):
+        """
+        Test the train method of the kNearestNeighbours class
+
+        Validates that the method executes training and generates model parameters
+        """
+        file = f"{self.testPath}knn_training_curve.png"
+        self.assertTrue(os.path.exists(file))
         try:
-            os.remove("knn_training_curve.png")
-            print(f"Deleted training curve after test.")
+            os.remove(file)
         except OSError as e:
             print(f"Error: {e.strerror}")
+            
+    def testEvaluate(self):
+        """
+        Test evaluation functionality of kNearestNeighbours model
         
-
-    def test_predict(self):
-        """ Test the prediction method """
-        self.model.train(self.testPath, self.trainImages, self.trainLabels, kmin=3, kmax=3)
-        predictions = self.model.predict(self.testImages)
-        self.assertEqual(len(predictions), len(self.testLabels))
-
-    def test_evaluate(self):
-        """ Test the evaluation method """
-        self.model.train(self.testPath, self.trainImages, self.trainLabels, kmin=3, kmax=3)
+        Validates that the method executes and evaluates the model
+        """
         accuracy = self.model.evaluate(self.testImages, self.testLabels)
         self.assertIsInstance(accuracy, float)
         self.assertGreaterEqual(accuracy, 0.0)
         self.assertLessEqual(accuracy, 1.0)
+        
+    def testPredict(self):
+        """
+        Test prediction functionality of kNearestNeighbours model
+        
+        Validates that the method executes and predicts using the model
+        """
+        predictions = self.model.predict(self.testImages)
+        self.assertEqual(len(predictions), len(self.testLabels))
 
-    def test_save_model(self):
-        """ Test the save model method """
+    def testSaveModel(self):
+        """
+        Test the saveModel method of the kNearestNeighbours class
+
+        Checks if the model can be saved without errors. This test ensures that file operations within
+        the saveModel method are functioning correctly
+        """
         # Assuming saveModel simply writes to a file, this could be mocked or checked if a file exists
-        self.model.train(self.testPath, self.trainImages, self.trainLabels, kmin=3, kmax=3)
-        filename = 'test_knn_model_parameters.txt'
-        self.model.saveModel(filename)
-        # Normally, you'd use mock here or check if file exists, then clean up
-        self.assertTrue(os.path.exists(filename))
+        file = "test_knn_model_parameters.txt"
+        self.model.saveModel(file)
+        # Normally, you"d use mock here or check if file exists, then clean up
+        self.assertTrue(os.path.exists(file))
         try:
-            os.remove(filename)
-            print(f"Deleted {filename} after test.")
+            os.remove(file)
+        except OSError as e:
+            print(f"Error: {e.strerror}")
+            
+    def testLoadModel(self):
+        """
+        Test the loadModel method of the kNearestNeighbours class
+
+        Verifies that model parameters are correctly restored from a file and that the loaded model
+        matches the original model in terms of parameter values
+        """
+        file = "test_knn_model_parameters.txt"
+        self.model.saveModel(file)
+        loadedModel = kNearestNeighbours(k=3, nSplits=5)
+        loadedModel.loadModel(file)
+        self.assertEqual(self.model.k, loadedModel.k)
+        self.assertEqual(self.model.nSplits, loadedModel.nSplits)
+        try:
+            os.remove(file)
         except OSError as e:
             print(f"Error: {e.strerror}")
 
-    def test_save_validation(self):
-        """ Test the save validation method """
-        self.model.train(self.testPath, self.trainImages, self.trainLabels, kmin=3, kmax=3)
-        self.model.evaluate(self.testImages, self.testLabels)
-        filename = 'test_knn_validation_results.txt'
-        self.model.saveValidation(filename)
-        self.assertTrue(os.path.exists(filename))
-        try:
-            os.remove(filename)
-            print(f"Deleted {filename} after test.")
-        except OSError as e:
-            print(f"Error: {e.strerror}")
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

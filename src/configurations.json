@@ -1,6 +1,6 @@
 {
     "loggingName": "test_run",
-    "runNumber": "23",
+    "runNumber": "40",
     "dataPath": "../data/raw/",
     "outputFigPath": "../outputs/learning-curves/",
     "outputValPath": "../outputs/model-validations/",

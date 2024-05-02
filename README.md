@@ -1,4 +1,4 @@
-# A comparative study of machine and deep learning methods for image calssification
+# A comparative study of machine and deep learning methods for image classification
 This repository presents the second coursework for the MATH70076 Data Science module at Imperial College London, where the project showcases different machine and deep learning methods for image calssification
 
 ## Project description
@@ -38,8 +38,6 @@ deactivate
 ## Outputs
 
 ### Model parameters
-
-### Model validations
 
 ### Model leanring curves
 
