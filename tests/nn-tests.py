@@ -11,7 +11,6 @@
 import unittest
 import torch
 from  torch.nn import CrossEntropyLoss, Linear, Flatten, ReLU
-from torch.nn.functional import softmax
 from torch.optim import Adam
 from torch.utils.data import DataLoader, TensorDataset
 import sys
@@ -44,7 +43,7 @@ class TestNeuralNetwork(unittest.TestCase):
         Initializes a NeuralNetwork instance and creates a DataLoader with synthetic data to be used in the tests
         """
         # Initialize the neural network
-        self.model = NeuralNetwork()
+        self.model = NeuralNetwork(imageDimensions=28)
         # Create synthetic data
         self.inputs = torch.randn(10, 1, 28, 28)  # 10 random 28x28 images
         self.labels = torch.randint(0, 10, (10,))  # 10 random labels
@@ -66,6 +65,7 @@ class TestNeuralNetwork(unittest.TestCase):
         self.assertTrue(callable(self.model.softmax))
 
         # Check layer dimensions
+        self.assertEqual(self.model.imageDimensions, 28, "Image dimensions mismatch")
         self.assertEqual(self.model.layer1.in_features, 28**2, "Layer 1 input features mismatch")
         self.assertEqual(self.model.layer1.out_features, 128, "Layer 1 output features mismatch")
         self.assertEqual(self.model.layer2.in_features, 128, "Layer 2 input features mismatch")

@@ -37,6 +37,7 @@ class kNearestNeighbours:
 
     Attributes:
         k (int): The number of neighbors to consider for the k-NN algorithm
+        nSplits (int): the number of folds for cross-validation for the k-NN algorithm 
         model (KNeighborsClassifier): The Scikit-Learn k-NN classifier
 
     Methods:

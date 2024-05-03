@@ -24,6 +24,8 @@ from data_loader import loadImages, loadLabels
 from gnb import GaussianNaiveBayes
 from knn  import kNearestNeighbours
 from nn import NeuralNetwork
+from cnn import ConvolutionalNeuralNetwork
+from gnn import GraphNeuralNetwork
 
 #=============================================================================
 # Functions
@@ -49,6 +51,20 @@ torch.manual_seed(123456789)
 
 # Set loss function for DL methods
 criterion = CrossEntropyLoss()
+
+# Class dictionary
+classes = {
+    0: "T-shirt/top",
+    1: "Trouser",
+    2: "Pullover",
+    3: "Dress",
+    4: "Coat",
+    5: "Sandal",
+    6: "Shirt",
+    7: "Sneaker",
+    8: "Bag",
+    9: "Ankle boot"
+}
 
 #=============================================================================
 # Programme exectuion
@@ -137,54 +153,76 @@ if __name__ == "__main__":
     #==========================================================================
     
     # Gaussian Naive-Bayes
-    logProgress("Running Gaussian Naive-Bayes...")
-    GNB = GaussianNaiveBayes(smoothing=1000.0)
-    GNB.train(trainImages, trainLabels)
-    logProgress("Naive-Bayes completed")
+    # logProgress("Running Gaussian Naive-Bayes...")
+    # GNB = GaussianNaiveBayes(smoothing=1000.0)
+    # GNB.train(trainImages, trainLabels)
+    # logProgress("Naive-Bayes completed")
     
-    logProgress("Validating Gaussian Naive-Bayes...")
-    accuracyGNB = GNB.evaluate(testImages, testLabels)
-    logProgress("Gaussian Naive-Bayes validation completed")
+    # logProgress("Validating Gaussian Naive-Bayes...")
+    # accuracyGNB = GNB.evaluate(testImages, testLabels)
+    # logProgress("Gaussian Naive-Bayes validation completed")
     
-    GNB.saveModel(f"{outputModelPath}{runNumber}_gaussian_naive_bayes_model_parameters_.txt")
-    logProgress("Gaussian Naive-Bayes model saved")
+    # GNB.saveModel(f"{outputModelPath}{runNumber}_gaussian_naive_bayes_model_parameters_.txt")
+    # logProgress("Gaussian Naive-Bayes model saved")
     
     
     # k-Nearest neighbours
-    logProgress("Training k-Nearest neighbours...")
-    kNN = kNearestNeighbours(k=1, nSplits=2)
-    kNN.train(f"{outputFigPath}{runNumber}_", trainImages, trainLabels, kmin=1, kmax=3)
-    logProgress("k-Nearest neighbours training completed")
+    # logProgress("Training k-Nearest neighbours...")
+    # kNN = kNearestNeighbours(k=1, nSplits=2)
+    # kNN.train(f"{outputFigPath}{runNumber}_", trainImages, trainLabels, kmin=1, kmax=3)
+    # logProgress("k-Nearest neighbours training completed")
     
-    logProgress("Validating k-Nearest neighbours...")
-    accuracykNN = kNN.evaluate(testImages, testLabels)
-    logProgress("k-Nearest neighbours validation completed")
+    # logProgress("Validating k-Nearest neighbours...")
+    # accuracykNN = kNN.evaluate(testImages, testLabels)
+    # logProgress("k-Nearest neighbours validation completed")
     
-    kNN.saveModel(f"{outputModelPath}{runNumber}_knn_model_parameters_.txt")
-    logProgress("k-Nearest neighbours model saved")
+    # kNN.saveModel(f"{outputModelPath}{runNumber}_knn_model_parameters_.txt")
+    # logProgress("k-Nearest neighbours model saved")
     
     
     # Neural Network
-    logProgress("Training neural network...")
-    NN = NeuralNetwork(imageDimensions=imageDimensions)
-    optimizer = optim.Adam(NN.parameters(), lr=0.001)
-    NN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
-    logProgress("neural network training completed")
+    # logProgress("Training neural network...")
+    # NN = NeuralNetwork(imageDimensions=imageDimensions)
+    # optimizer = optim.Adam(NN.parameters(), lr=0.001)
+    # NN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
+    # logProgress("neural network training completed")
 
-    logProgress("Validating neural network...")
-    accuracNN = NN.evaluate(testData)
-    logProgress("Neural network validation completed")
+    # logProgress("Validating neural network...")
+    # accuracyNN = NN.evaluate(testData)
+    # logProgress("Neural network validation completed")
 
-    NN.saveModel(f"{outputModelPath}{runNumber}_nn_model.pth")
-    logProgress("Neural network model saved")
+    # NN.saveModel(f"{outputModelPath}{runNumber}_nn_model.pth")
+    # logProgress("Neural network model saved")
     
     
     # Convolutional neural network
+    # logProgress("Training convolutional neural network...")
+    # CNN = ConvolutionalNeuralNetwork(imageDimensions=imageDimensions)
+    # optimizer = optim.Adam(CNN.parameters(), lr=0.001)
+    # CNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
+    # logProgress("Convolutional neural network training completed")
+
+    # logProgress("Validating convolutional neural network...")
+    # accuracyCNN = CNN.evaluate(testData)
+    # logProgress("Convolutional neural network validation completed")
+
+    # CNN.saveModel(f"{outputModelPath}{runNumber}_cnn_model.pth")
+    # logProgress("Convolutional neural network model saved")
     
     
-    
-    # Geometric neural network 
-    
+    # Graph neural network 
+    logProgress("Training Graph neural network...")
+    GNN = GraphNeuralNetwork(imageDimensions=imageDimensions)
+    optimizer = optim.Adam(GNN.parameters(), lr=0.001)
+    GNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
+    logProgress("Graph neural network training completed")
+
+    logProgress("Validating geometric neural network...")
+    accuracyGNN = GNN.evaluate(testData)
+    logProgress("Graph neural network validation completed")
+
+    GNN.saveModel(f"{outputModelPath}{runNumber}_gnn_model.pth")
+    logProgress("Graph neural network model saved")
     
     #==========================================================================
     # Programme completion

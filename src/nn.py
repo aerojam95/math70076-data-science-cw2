@@ -10,7 +10,7 @@
 # Standard modules
 import torch
 from torch.nn import Linear, Flatten, ReLU, Module
-import torch.nn.functional as F
+from torch.nn.functional import softmax
 import matplotlib.pyplot as plt
 import os
 
@@ -40,15 +40,15 @@ class NeuralNetwork(Module):
         layer3 (nn.Module): The third linear layer that outputs to the number of classes
         activation (function): The activation function to use in the network
         softmax (function): The softmax function for output normalization
-        predictAccuracy (float): The accuracy of the model on the evaluation dataset
         
     Methods:
-        _getTrainingCurve: Generates and saves a plot of the training loss curve
-        forward: Defines the forward pass of the neural network
-        trainModel: Trains the model using provided data, optimizer, and loss function
-        evaluate: Evaluates the model"s performance on a test dataset
-        saveModel: Saves the model to a specified file path
-        loadModel: Loads the model from a specified file path
+        _getTrainingCurve(losses, CurvePath, epochs): Generates and saves a plot of the training loss curve
+        forward(inputs): Defines the forward pass of the neural network
+        trainModel(trainData, valData, criterion, optimizer, CurvePath:str, epochs:int=10)): Trains the model using provided data, optimizer, and loss function
+        evaluate(testData): Evaluates the model's performance on a test dataset
+        predict(inputs): makes predictions on image inputs and classifies image based on model classes in trianing data 
+        saveModel(filename): Saves the model to a specified file path
+        loadModel(filename): Loads the model from a specified file path
     """
     def __init__(self, imageDimensions:int=28, **kwargs):
         """
@@ -58,12 +58,13 @@ class NeuralNetwork(Module):
             imageDimensions (int): The dimensions (height and width) of the input images
         """
         super(NeuralNetwork, self).__init__(**kwargs)
+        self.imageDimensions = imageDimensions
         self.flatten    = Flatten()
-        self.layer1     = Linear(imageDimensions ** 2, 128)
+        self.layer1     = Linear(self.imageDimensions ** 2, 128)
         self.layer2     = Linear(128, 128)
         self.layer3     = Linear(128, 10)
         self.activation = ReLU()
-        self.softmax    = F.softmax
+        self.softmax    = softmax
         
     def _getTrainingCurve(self, losses:list, CurvePath:str, epochs:int=10):
         """

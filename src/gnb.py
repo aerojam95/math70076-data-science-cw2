@@ -41,7 +41,7 @@ class GaussianNaiveBayes():
         saveModel(filename): Saves the model parameters to a file
         loadModel(filename): loads model parameters from an exists model .txt file
     """
-    def __init__(self, smoothing:float=1000., **kwargs):
+    def __init__(self, smoothing:float=1000.):
         """
         Initializes the GaussianNaiveBayes classifier with optional smoothing
 
