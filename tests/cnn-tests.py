@@ -10,7 +10,7 @@
 # Standard modules
 import unittest
 import torch
-from torch.nn import Linear, Conv2d, ReLU, MaxPool2d
+from torch.nn import Linear, Conv2d, Sequential, Dropout
 import sys
 import os
 
@@ -29,7 +29,7 @@ from cnn import ConvolutionalNeuralNetwork
 #=============================================================================
 
 #=============================================================================
-# Unit test class from nn.py
+# Unit test class from py
 #=============================================================================
 
 class TestNeuralNetwork(unittest.TestCase):
@@ -41,8 +41,8 @@ class TestNeuralNetwork(unittest.TestCase):
         Initializes a NeuralNetwork instance and creates a DataLoader with synthetic data to be used in the tests
         """
         # Initialize the neural network
-        self.image_dimension = 28
-        self.model = ConvolutionalNeuralNetwork(imageDimensions=self.image_dimension)
+        self.model = ConvolutionalNeuralNetwork(numClasses=10)
+        self.testData = torch.randn(1, 1, 28, 28)
         
     def testInitialization(self):
         """
@@ -50,45 +50,29 @@ class TestNeuralNetwork(unittest.TestCase):
         
         Ensures that the layers that will be used in the model are initiliased correctly before the model is built
         """
-        self.assertIsInstance(self.model.conv1, Conv2d, "Conv Layer 1 should be an instance of torch.nn.Conv2d")
-        self.assertIsInstance(self.model.conv2, Conv2d, "Conv Layer 2 should be an instance of torch.nn.Conv2d")
-        self.assertIsInstance(self.model.conv3, Conv2d, "Conv Layer 3 should be an instance of torch.nn.Conv2d")
-        self.assertIsInstance(self.model.conv4, Conv2d, "Conv Layer 4 should be an instance of torch.nn.Conv2d")
-        self.assertIsInstance(self.model.fc1, Linear, "FC Layer 1 should be an instance of torch.nn.Linear")
-        self.assertIsInstance(self.model.fc2, Linear, "FC Layer 2 should be an instance of torch.nn.Linear")
-        self.assertIsInstance(self.model.fc3, Linear, "FC Layer 3 should be an instance of torch.nn.Linear")
-        self.assertIsInstance(self.model.activation, ReLU, "Activation should be an instance of torch.nn.ReLU")
-        self.assertIsInstance(self.model.pool, MaxPool2d, "Pooling should be an instance of torch.nn.MaxPool2d")
+        self.assertIsInstance(self.model.convlayer1, Sequential)
+        self.assertIsInstance(self.model.convlayer2, Sequential)
+        self.assertIsInstance(self.model.fc1, Linear)
+        self.assertIsInstance(self.model.drop, Dropout)
+        self.assertIsInstance(self.model.fc2, Linear)
+        self.assertIsInstance(self.model.fc3, Linear)
         self.assertTrue(callable(self.model.softmax))
-
-        # Check image dimensions
-        self.assertEqual(self.model.imageDimensions, 28, "Image dimensions mismatch")
         
-        # Check convolutional layers
-        conv_layers = [
-            (self.model.conv1, 1, 32, 3),
-            (self.model.conv2, 32, 64, 3),
-            (self.model.conv3, 64, 128, 3),
-            (self.model.conv4, 128, 128, 1)
-        ]
-        for i, (layer, in_channels, out_channels, kernel_size) in enumerate(conv_layers, 1):
-            with self.subTest(layer=f"conv{i}"):
-                self.assertIsInstance(layer, Conv2d, f"conv{i} should be an instance of nn.Conv2d")
-                self.assertEqual(layer.in_channels, in_channels, f"Incorrect number of input channels in conv{i}")
-                self.assertEqual(layer.out_channels, out_channels, f"Incorrect number of output channels in conv{i}")
-                self.assertEqual(layer.kernel_size, (kernel_size, kernel_size), f"Incorrect kernel size in conv{i}")
-
-        # Check linear layers
-        linear_layers = [
-            (self.model.fc1, 128, 64),
-            (self.model.fc2, 64, 32),
-            (self.model.fc3, 32, 10)
-        ]
-        for i, (layer, in_features, out_features) in enumerate(linear_layers, 1):
-            with self.subTest(layer=f"fc{i}"):
-                self.assertIsInstance(layer, Linear, f"FC{i} should be an instance of nn.Linear")
-                self.assertEqual(layer.in_features, in_features, f"Incorrect input features in FC{i}")
-                self.assertEqual(layer.out_features, out_features, f"Incorrect output features in FC{i}")
+        # Check layer dimensions after each operation
+        convlayer1_output = self.model.convlayer1(self.testData)
+        self.assertEqual(convlayer1_output.shape, torch.Size([1, 32, 14, 14]))
+        convlayer2_output = self.model.convlayer2(convlayer1_output)
+        self.assertEqual(convlayer2_output.shape, torch.Size([1, 64, 6, 6]))
+        flattened_output = convlayer2_output.view(-1, 64 * 6 * 6)
+        self.assertEqual(flattened_output.shape, torch.Size([1, 64 * 6 * 6]))
+        fc1_output = self.model.fc1(flattened_output)
+        self.assertEqual(fc1_output.shape, torch.Size([1, 600]))
+        dropout_output = self.model.drop(fc1_output)
+        self.assertEqual(dropout_output.shape, torch.Size([1, 600]))
+        fc2_output = self.model.fc2(dropout_output)
+        self.assertEqual(fc2_output.shape, torch.Size([1, 120]))
+        fc3_output = self.model.fc3(fc2_output)
+        self.assertEqual(fc3_output.shape, torch.Size([1, 10]))
         
 
     def testForward(self):
@@ -98,8 +82,7 @@ class TestNeuralNetwork(unittest.TestCase):
         Ensures that the output of the forward method has the correct shape given a batch of inputs,
         matching the expected batch size and number of class predictions
         """
-        input_tensor = torch.randn(1, 1, self.image_dimension, self.image_dimension)
-        output = self.model.forward(input_tensor)
+        output = self.model.forward(self.testData)
         self.assertEqual(output.shape, (1, 10), "Output tensor should be of shape (1, number of classes)")
         self.assertTrue(torch.allclose(output.sum(), torch.tensor(1.0)), "Output probabilities should sum to 1")
         

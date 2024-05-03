@@ -57,21 +57,20 @@ class TestNeuralNetwork(unittest.TestCase):
         
         Ensures that the layers that will be used in the model are initiliased correctly before the model is built
         """
-        self.assertIsInstance(self.model.flatten, Flatten, "Flatten layer should be an instance of torch.nn.Flatten")
-        self.assertIsInstance(self.model.layer1, Linear, "Layer 1 should be an instance of torch.nn.Linear")
-        self.assertIsInstance(self.model.layer2, Linear, "Layer 2 should be an instance of torch.nn.Linear")
-        self.assertIsInstance(self.model.layer3, Linear, "Layer 3 should be an instance of torch.nn.Linear")
-        self.assertIsInstance(self.model.activation, ReLU, "Activation should be an instance of torch.nn.ReLU")
+        self.assertIsInstance(self.model.flatten, Flatten)
+        self.assertIsInstance(self.model.layer1, Linear)
+        self.assertIsInstance(self.model.layer2, Linear)
+        self.assertIsInstance(self.model.layer3, Linear)
+        self.assertIsInstance(self.model.activation, ReLU)
         self.assertTrue(callable(self.model.softmax))
 
         # Check layer dimensions
-        self.assertEqual(self.model.imageDimensions, 28, "Image dimensions mismatch")
-        self.assertEqual(self.model.layer1.in_features, 28**2, "Layer 1 input features mismatch")
-        self.assertEqual(self.model.layer1.out_features, 128, "Layer 1 output features mismatch")
-        self.assertEqual(self.model.layer2.in_features, 128, "Layer 2 input features mismatch")
-        self.assertEqual(self.model.layer2.out_features, 128, "Layer 2 output features mismatch")
-        self.assertEqual(self.model.layer3.in_features, 128, "Layer 3 input features mismatch")
-        self.assertEqual(self.model.layer3.out_features, 10, "Layer 3 output features mismatch")
+        self.assertEqual(self.model.layer1.in_features, 28**2)
+        self.assertEqual(self.model.layer1.out_features, 128)
+        self.assertEqual(self.model.layer2.in_features, 128)
+        self.assertEqual(self.model.layer2.out_features, 128)
+        self.assertEqual(self.model.layer3.in_features, 128)
+        self.assertEqual(self.model.layer3.out_features, 10)
 
     def testForward(self):
         """

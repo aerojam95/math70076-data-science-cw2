@@ -39,6 +39,10 @@ from gnn import GraphNeuralNetwork
 # Path to the JSON metadata file
 metadataFilePath = "configurations.json"
 
+# Use GPU resources for DL model if available
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
+
 # Size of image dimensons for Fashion MNIST dataset
 imageDimensions=28
 
@@ -65,6 +69,9 @@ classes = {
     8: "Bag",
     9: "Ankle boot"
 }
+
+# Number of classes in Fashion MNIST dataset
+numClasses= 10
 
 #=============================================================================
 # Programme exectuion
@@ -196,33 +203,33 @@ if __name__ == "__main__":
     
     
     # Convolutional neural network
-    # logProgress("Training convolutional neural network...")
-    # CNN = ConvolutionalNeuralNetwork(imageDimensions=imageDimensions)
-    # optimizer = optim.Adam(CNN.parameters(), lr=0.001)
-    # CNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
-    # logProgress("Convolutional neural network training completed")
+    logProgress("Training convolutional neural network...")
+    CNN = ConvolutionalNeuralNetwork()
+    optimizer = optim.Adam(CNN.parameters(), lr=0.001)
+    CNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
+    logProgress("Convolutional neural network training completed")
 
-    # logProgress("Validating convolutional neural network...")
-    # accuracyCNN = CNN.evaluate(testData)
-    # logProgress("Convolutional neural network validation completed")
+    logProgress("Validating convolutional neural network...")
+    accuracyCNN = CNN.evaluate(testData)
+    logProgress("Convolutional neural network validation completed")
 
-    # CNN.saveModel(f"{outputModelPath}{runNumber}_cnn_model.pth")
-    # logProgress("Convolutional neural network model saved")
+    CNN.saveModel(f"{outputModelPath}{runNumber}_cnn_model.pth")
+    logProgress("Convolutional neural network model saved")
     
     
     # Graph neural network 
-    logProgress("Training Graph neural network...")
-    GNN = GraphNeuralNetwork(imageDimensions=imageDimensions)
-    optimizer = optim.Adam(GNN.parameters(), lr=0.001)
-    GNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
-    logProgress("Graph neural network training completed")
+    # logProgress("Training Graph neural network...")
+    # GNN = GraphNeuralNetwork(imageDimensions=imageDimensions, numClasses=numClasses, predEdge = True)
+    # optimizer = optim.Adam(GNN.parameters(), lr=0.001)
+    # GNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
+    # logProgress("Graph neural network training completed")
 
-    logProgress("Validating geometric neural network...")
-    accuracyGNN = GNN.evaluate(testData)
-    logProgress("Graph neural network validation completed")
+    # logProgress("Validating geometric neural network...")
+    # accuracyGNN = GNN.evaluate(testData)
+    # logProgress("Graph neural network validation completed")
 
-    GNN.saveModel(f"{outputModelPath}{runNumber}_gnn_model.pth")
-    logProgress("Graph neural network model saved")
+    # GNN.saveModel(f"{outputModelPath}{runNumber}_gnn_model.pth")
+    # logProgress("Graph neural network model saved")
     
     #==========================================================================
     # Programme completion

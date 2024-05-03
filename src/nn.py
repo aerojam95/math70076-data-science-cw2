@@ -58,9 +58,8 @@ class NeuralNetwork(Module):
             imageDimensions (int): The dimensions (height and width) of the input images
         """
         super(NeuralNetwork, self).__init__(**kwargs)
-        self.imageDimensions = imageDimensions
         self.flatten    = Flatten()
-        self.layer1     = Linear(self.imageDimensions ** 2, 128)
+        self.layer1     = Linear(imageDimensions ** 2, 128)
         self.layer2     = Linear(128, 128)
         self.layer3     = Linear(128, 10)
         self.activation = ReLU()
