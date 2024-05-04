@@ -41,6 +41,8 @@ deactivate
 
 ### Model leanring curves
 
+### Model predictions
+
 ## Methods implement
 
 ### Gaussian Naive-Bayes

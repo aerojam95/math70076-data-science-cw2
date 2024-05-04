@@ -22,10 +22,11 @@ import torch.optim as optim
 from logger import logProgress
 from data_loader import loadImages, loadLabels
 from gnb import GaussianNaiveBayes
-from knn  import kNearestNeighbours
-from nn import NeuralNetwork
+from knn import kNearestNeighbours
+from nn  import NeuralNetwork
 from cnn import ConvolutionalNeuralNetwork
 from gnn import GraphNeuralNetwork
+from predict_plotter import predictPlotter
 
 #=============================================================================
 # Functions
@@ -153,6 +154,14 @@ if __name__ == "__main__":
     logProgress("Pre-processing image data...")
     trainImages = trainImages.reshape(trainImages.shape[0], -1) / pixels
     testImages = testImages.reshape(testImages.shape[0], -1) / pixels
+    print(trainImages.shape)
+    print(trainLabels.shape)
+    
+    # Take random samples here for later ML predictions
+    randomIndices = [0, 1000]
+    randomImages =  [testImages[index] for index in randomIndices]
+    randomLabels =  [testLabels[index] for index in randomIndices]
+    
     logProgress("Pre-processed image data")
     
     #==========================================================================
@@ -160,76 +169,96 @@ if __name__ == "__main__":
     #==========================================================================
     
     # Gaussian Naive-Bayes
-    # logProgress("Running Gaussian Naive-Bayes...")
-    # GNB = GaussianNaiveBayes(smoothing=1000.0)
-    # GNB.train(trainImages, trainLabels)
-    # logProgress("Naive-Bayes completed")
+    logProgress("Running Gaussian Naive-Bayes...")
+    GNB = GaussianNaiveBayes(smoothing=1000.0)
+    GNB.train(trainImages, trainLabels)
+    logProgress("Naive-Bayes completed")
     
-    # logProgress("Validating Gaussian Naive-Bayes...")
-    # accuracyGNB = GNB.evaluate(testImages, testLabels)
-    # logProgress("Gaussian Naive-Bayes validation completed")
+    logProgress("Validating Gaussian Naive-Bayes...")
+    accuracyGNB = GNB.evaluate(testImages, testLabels)
+    logProgress("Gaussian Naive-Bayes validation completed")
     
-    # GNB.saveModel(f"{outputModelPath}{runNumber}_gaussian_naive_bayes_model_parameters_.txt")
-    # logProgress("Gaussian Naive-Bayes model saved")
+    GNB.saveModel(f"{outputModelPath}{loggingName}_{runNumber}_gaussian_naive_bayes_model_parameters.txt")
+    logProgress("Gaussian Naive-Bayes model saved")
+    
+    predictionGNB = GNB.predict(np.expand_dims(randomImages[0], axis=0))
+    predictPlotter(randomImages[0].reshape(28, 28), randomLabels[0], predictionGNB[0], classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_gnb.png")
+    logProgress("Gaussian Naive-Bayes example prediction")
     
     
     # k-Nearest neighbours
-    # logProgress("Training k-Nearest neighbours...")
-    # kNN = kNearestNeighbours(k=1, nSplits=2)
-    # kNN.train(f"{outputFigPath}{runNumber}_", trainImages, trainLabels, kmin=1, kmax=3)
-    # logProgress("k-Nearest neighbours training completed")
+    logProgress("Training k-Nearest neighbours...")
+    kNN = kNearestNeighbours(k=1, nSplits=10)
+    kNN.train(f"{outputFigPath}{loggingName}_{runNumber}_", trainImages, trainLabels, kmin=1, kmax=20)
+    logProgress("k-Nearest neighbours training completed")
     
-    # logProgress("Validating k-Nearest neighbours...")
-    # accuracykNN = kNN.evaluate(testImages, testLabels)
-    # logProgress("k-Nearest neighbours validation completed")
+    logProgress("Validating k-Nearest neighbours...")
+    accuracykNN = kNN.evaluate(testImages, testLabels)
+    logProgress("k-Nearest neighbours validation completed")
     
-    # kNN.saveModel(f"{outputModelPath}{runNumber}_knn_model_parameters_.txt")
-    # logProgress("k-Nearest neighbours model saved")
+    kNN.saveModel(f"{outputModelPath}{loggingName}_{runNumber}_knn_model_parameters.txt")
+    logProgress("k-Nearest neighbours model saved")
+    
+    predictionkNN = kNN.predict(np.expand_dims(randomImages[1], axis=0))
+    predictPlotter(randomImages[1].reshape(28, 28), randomLabels[1], predictionkNN[0], classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_knn.png")
+    logProgress("k-Nearest neighbours example prediction")
     
     
     # Neural Network
-    # logProgress("Training neural network...")
-    # NN = NeuralNetwork(imageDimensions=imageDimensions)
-    # optimizer = optim.Adam(NN.parameters(), lr=0.001)
-    # NN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
-    # logProgress("neural network training completed")
+    logProgress("Training neural network...")
+    NN = NeuralNetwork(imageDimensions=imageDimensions, numClasses=numClasses)
+    optimizer = optim.Adam(NN.parameters(), lr=0.001)
+    NN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_", epochs=50)
+    logProgress("neural network training completed")
 
-    # logProgress("Validating neural network...")
-    # accuracyNN = NN.evaluate(testData)
-    # logProgress("Neural network validation completed")
+    logProgress("Validating neural network...")
+    accuracyNN = NN.evaluate(testData)
+    logProgress("Neural network validation completed")
 
-    # NN.saveModel(f"{outputModelPath}{runNumber}_nn_model.pth")
-    # logProgress("Neural network model saved")
+    NN.saveModel(f"{outputModelPath}{loggingName}_{runNumber}_nn_model.pth")
+    logProgress("Neural network model saved")
+    
+    predictionNN = NN.predict(testData.dataset[2000][0])
+    predictPlotter(testData.dataset[2000][0].squeeze(), testData.dataset[2000][1], predictionNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_NN.png")
+    logProgress("Neural network example prediction")
     
     
     # Convolutional neural network
     logProgress("Training convolutional neural network...")
     CNN = ConvolutionalNeuralNetwork()
     optimizer = optim.Adam(CNN.parameters(), lr=0.001)
-    CNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
+    CNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_", epochs=50)
     logProgress("Convolutional neural network training completed")
 
     logProgress("Validating convolutional neural network...")
     accuracyCNN = CNN.evaluate(testData)
     logProgress("Convolutional neural network validation completed")
 
-    CNN.saveModel(f"{outputModelPath}{runNumber}_cnn_model.pth")
+    CNN.saveModel(f"{outputModelPath}{loggingName}_{runNumber}_cnn_model.pth")
     logProgress("Convolutional neural network model saved")
+    
+    predictionCNN = CNN.predict(testData.dataset[3000][0].unsqueeze(1))
+    predictPlotter(testData.dataset[3000][0].squeeze(), testData.dataset[3000][1], predictionCNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_CNN.png")
+    logProgress("Convolutional neural network example prediction")
     
     
     # Graph neural network 
-    # logProgress("Training Graph neural network...")
-    # GNN = GraphNeuralNetwork(imageDimensions=imageDimensions, numClasses=numClasses, predEdge = True)
-    # optimizer = optim.Adam(GNN.parameters(), lr=0.001)
-    # GNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{runNumber}_", epochs=2)
-    # logProgress("Graph neural network training completed")
+    logProgress("Training Graph neural network...")
+    GNN = GraphNeuralNetwork(imageDimensions=imageDimensions, numClasses=numClasses, predEdge=True)
+    optimizer = optim.Adam(GNN.parameters(), lr=0.001)
+    GNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_", epochs=10)
+    logProgress("Graph neural network training completed")
 
-    # logProgress("Validating geometric neural network...")
-    # accuracyGNN = GNN.evaluate(testData)
-    # logProgress("Graph neural network validation completed")
+    logProgress("Validating geometric neural network...")
+    accuracyGNN = GNN.evaluate(testData)
+    logProgress("Graph neural network validation completed")
 
-    # GNN.saveModel(f"{outputModelPath}{runNumber}_gnn_model.pth")
-    # logProgress("Graph neural network model saved")
+    GNN.saveModel(f"{outputModelPath}{loggingName}_{runNumber}_gnn_model.pth")
+    logProgress("Graph neural network model saved")
+    
+    predictionGNN = GNN.predict(testData.dataset[4000][0])
+    predictPlotter(testData.dataset[4000][0].squeeze(), testData.dataset[4000][1], predictionGNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_GNN.png")
+    logProgress("Graph neural network example prediction")
     
     #==========================================================================
     # Programme completion

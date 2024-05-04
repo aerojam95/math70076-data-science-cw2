@@ -124,7 +124,7 @@ class TestNeuralNetwork(unittest.TestCase):
         for inputs, _ in self.dataloader:
             predictions = self.model.predict(inputs)
             self.assertEqual(predictions.shape[0], inputs.shape[0], "The number of predictions should match the number of input samples")
-            self.assertTrue(predictions.dtype == torch.int64, "Predictions should be of type torch.int64")
+            self.assertTrue(type(predictions) == int, "Predictions should be of type torch.int64")
     
 
     def testSaveModel(self):

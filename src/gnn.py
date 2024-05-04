@@ -35,9 +35,10 @@ class GraphNeuralNetwork(NeuralNetwork):
     A feedforward Graph neural network for image classification
 
     Attributes:
-        imageDimensions (int): The height and width of the input images. Assumes square images
-        numClasses (int): Number of classes contained in the dataset that the model will be used on
-        predEdge (bool): To calculate edges of the graph representation of the input images
+        predEdge (bool): Whether to calculate edges of the graph representation of the input images
+        fc (tLinear): The fully connected layer
+        predEdgeFc (Sequential): Sequential module for predicting edges between pixels
+        softmax (function): Softmax activation function
         
     Methods:
         forward(inputs): Defines the forward pass of the neural network
@@ -93,13 +94,12 @@ class GraphNeuralNetwork(NeuralNetwork):
 
     @staticmethod
     # Static method knows nothing about the class and just deals with the parameters.
-    def precomputeAdjacencyImages(imageDimensions:int=28, numClasses:int=10):
+    def precomputeAdjacencyImages(imageDimensions:int=28):
         """
         Initializes the Graph neural network architecture
         
         Args:
             imageDimensions (int): The dimensions (height and width) of the input images
-            numClasses (int): Number of classes contained in the dataset that the model will be used on
             
         Returns:
             AHat (torch.Tensor):Adjacency matrix

@@ -31,7 +31,13 @@ class ConvolutionalNeuralNetwork(NeuralNetwork):
     A feedforward neural network for image classification
 
     Attributes:
-        numClasses (int): Number of classes contained in the dataset that the model will be used on
+        convlayer1 (Sequential): Sequential module containing the first convolutional layer followed by Batch Normalization, ReLU activation, and Max Pooling
+        convlayer2 (Sequential): Sequential module containing the second convolutional layer followed by Batch Normalization, ReLU activation, and Max Pooling
+        fc1 (.Linear): Fully connected layer 1
+        drop (Dropout): Dropout layer
+        fc2 (Linear): Fully connected layer 2
+        fc3 (Linear): Fully connected layer 3
+        softmax (function): Softmax activation function
         
     Methods:
         forward(inputs): Defines the forward pass of the neural network
@@ -60,7 +66,7 @@ class ConvolutionalNeuralNetwork(NeuralNetwork):
         self.drop = Dropout(0.25)
         self.fc2 = Linear(600, 120)
         self.fc3 = Linear(120, numClasses)
-        self.softmax    = softmax
+        self.softmax = softmax
         
     def forward(self, inputs):
         """

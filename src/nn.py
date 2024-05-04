@@ -33,7 +33,6 @@ class NeuralNetwork(Module):
     A feedforward neural network for image classification
 
     Attributes:
-        imageDimensions (int): The height and width of the input images. Assumes square images
         flatten (nn.Module): A module to flatten the input tensors
         layer1 (nn.Module): The first linear layer
         layer2 (nn.Module): The second linear layer
@@ -50,18 +49,19 @@ class NeuralNetwork(Module):
         saveModel(filename): Saves the model to a specified file path
         loadModel(filename): Loads the model from a specified file path
     """
-    def __init__(self, imageDimensions:int=28, **kwargs):
+    def __init__(self, imageDimensions:int=28, numClasses:int=10, **kwargs):
         """
         Initializes the network architecture
         
         Args:
             imageDimensions (int): The dimensions (height and width) of the input images
+            numClasses (int): Number of classes contained in the dataset that the model will be used on
         """
         super(NeuralNetwork, self).__init__(**kwargs)
         self.flatten    = Flatten()
         self.layer1     = Linear(imageDimensions ** 2, 128)
         self.layer2     = Linear(128, 128)
-        self.layer3     = Linear(128, 10)
+        self.layer3     = Linear(128, numClasses)
         self.activation = ReLU()
         self.softmax    = softmax
         
@@ -196,7 +196,7 @@ class NeuralNetwork(Module):
             outputs = self(inputs)
             # Get predicted label
             predictions = outputs.argmax(dim=1)
-        return predictions
+        return int(predictions.item())
 
     def saveModel(self, filename:str="nn_validation_results.txt"):
         """

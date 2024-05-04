@@ -75,7 +75,7 @@ class TestNeuralNetwork(unittest.TestCase):
         
     def testPrecomputeAdjacencyImages(self):
         # Test the precomputeAdjacencyImages method
-        AHat = GraphNeuralNetwork.precomputeAdjacencyImages(imageDimensions=28, numClasses=10)
+        AHat = GraphNeuralNetwork.precomputeAdjacencyImages(imageDimensions=28)
         self.assertEqual(AHat.shape, torch.Size([784, 784]))  # Ensure the output shape is as expected
         # Ensure the adjacency matrix is symmetric
         self.assertTrue(torch.allclose(AHat, AHat.T))
