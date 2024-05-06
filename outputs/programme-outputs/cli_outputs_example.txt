@@ -1,0 +1,145 @@
+Using device: cuda
+06 May 2024 01:05:12: Starting programme...
+06 May 2024 01:05:12: Importing metadata...
+06 May 2024 01:05:12: Imported metadata
+06 May 2024 01:05:12: Updating metadata file...
+06 May 2024 01:05:12: Updated metadata file
+06 May 2024 01:05:12: Loading ML data...
+06 May 2024 01:05:13: Loaded ML data
+06 May 2024 01:05:13: Pre-processing image data...
+06 May 2024 01:05:13: Pre-processed image data
+06 May 2024 01:05:13: Running Gaussian Naive-Bayes...
+Gaussian Naive-Bayes has 21 parameters
+Training Progress: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [00:00<00:00, 27.65it/s]
+06 May 2024 01:05:14: Naive-Bayes completed
+06 May 2024 01:05:14: Validating Gaussian Naive-Bayes...
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10000/10000 [00:02<00:00, 3474.31it/s]
+Test accuracy for Gaussian Naive Bayes model: 61.46%
+06 May 2024 01:05:17: Gaussian Naive-Bayes validation completed
+06 May 2024 01:05:17: Gaussian Naive-Bayes model saved
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00, 2106.63it/s]
+06 May 2024 01:05:17: Gaussian Naive-Bayes example prediction
+06 May 2024 01:05:17: Training k-Nearest neighbours...
+k-Nearest neighbours has 2 parameters with the Euclidean distance
+Training Progress: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [03:38<00:00, 21.82s/it]
+06 May 2024 01:08:55: k-Nearest neighbours training completed
+06 May 2024 01:08:55: Validating k-Nearest neighbours...
+Test accuracy for 4-Nearest neighbours model: 85.77%
+06 May 2024 01:08:59: k-Nearest neighbours validation completed
+06 May 2024 01:08:59: k-Nearest neighbours model saved
+06 May 2024 01:08:59: k-Nearest neighbours example prediction
+06 May 2024 01:08:59: Training neural network...
+Neural network has 118282 parameters
+Test accuracy: 80.87% 
+[Epoch 1/20] Loss: 1.71, Training accuracy: 76.22%, Validation accuracy: 80.87%
+Test accuracy: 82.28% 
+[Epoch 2/20] Loss: 1.64, Training accuracy: 82.25%, Validation accuracy: 82.28%
+Test accuracy: 83.30% 
+[Epoch 3/20] Loss: 1.62, Training accuracy: 83.95%, Validation accuracy: 83.30%
+Test accuracy: 83.47% 
+[Epoch 4/20] Loss: 1.61, Training accuracy: 84.69%, Validation accuracy: 83.47%
+Test accuracy: 85.09% 
+[Epoch 5/20] Loss: 1.61, Training accuracy: 85.29%, Validation accuracy: 85.09%
+Test accuracy: 85.29% 
+[Epoch 6/20] Loss: 1.61, Training accuracy: 85.48%, Validation accuracy: 85.29%
+Test accuracy: 85.34% 
+[Epoch 7/20] Loss: 1.60, Training accuracy: 86.12%, Validation accuracy: 85.34%
+Test accuracy: 85.32% 
+[Epoch 8/20] Loss: 1.60, Training accuracy: 86.50%, Validation accuracy: 85.32%
+Test accuracy: 84.93% 
+[Epoch 9/20] Loss: 1.59, Training accuracy: 86.61%, Validation accuracy: 84.93%
+Test accuracy: 86.00% 
+[Epoch 10/20] Loss: 1.59, Training accuracy: 86.86%, Validation accuracy: 86.00%
+Test accuracy: 85.97% 
+[Epoch 11/20] Loss: 1.59, Training accuracy: 87.13%, Validation accuracy: 85.97%
+Test accuracy: 85.69% 
+[Epoch 12/20] Loss: 1.59, Training accuracy: 87.20%, Validation accuracy: 85.69%
+Test accuracy: 86.98% 
+[Epoch 13/20] Loss: 1.59, Training accuracy: 87.53%, Validation accuracy: 86.98%
+Test accuracy: 85.92% 
+[Epoch 14/20] Loss: 1.58, Training accuracy: 87.89%, Validation accuracy: 85.92%
+Test accuracy: 85.20% 
+[Epoch 15/20] Loss: 1.58, Training accuracy: 87.57%, Validation accuracy: 85.20%
+Test accuracy: 87.18% 
+[Epoch 16/20] Loss: 1.58, Training accuracy: 88.11%, Validation accuracy: 87.18%
+Test accuracy: 86.37% 
+[Epoch 17/20] Loss: 1.58, Training accuracy: 88.14%, Validation accuracy: 86.37%
+Test accuracy: 87.48% 
+[Epoch 18/20] Loss: 1.58, Training accuracy: 88.41%, Validation accuracy: 87.48%
+Test accuracy: 86.10% 
+[Epoch 19/20] Loss: 1.58, Training accuracy: 88.13%, Validation accuracy: 86.10%
+Test accuracy: 87.17% 
+[Epoch 20/20] Loss: 1.58, Training accuracy: 88.11%, Validation accuracy: 87.17%
+06 May 2024 01:12:16: neural network training completed
+06 May 2024 01:12:16: Validating neural network...
+Test accuracy: 86.18% 
+06 May 2024 01:12:17: Neural network validation completed
+06 May 2024 01:12:17: Neural network model saved
+06 May 2024 01:12:17: Neural network example prediction
+06 May 2024 01:12:17: Training convolutional neural network...
+Convolutional neural network has 1593620 parameters
+Test accuracy: 62.48% 
+[Epoch 1/20] Loss: 1.82, Training accuracy: 63.99%, Validation accuracy: 62.48%
+Test accuracy: 69.23% 
+[Epoch 2/20] Loss: 1.80, Training accuracy: 66.20%, Validation accuracy: 69.23%
+Test accuracy: 68.16% 
+[Epoch 3/20] Loss: 1.80, Training accuracy: 65.85%, Validation accuracy: 68.16%
+Test accuracy: 69.40% 
+[Epoch 4/20] Loss: 1.79, Training accuracy: 67.04%, Validation accuracy: 69.40%
+Test accuracy: 55.15% 
+[Epoch 5/20] Loss: 1.81, Training accuracy: 65.39%, Validation accuracy: 55.15%
+Test accuracy: 68.01% 
+[Epoch 6/20] Loss: 1.78, Training accuracy: 67.62%, Validation accuracy: 68.01%
+Test accuracy: 64.02% 
+[Epoch 7/20] Loss: 1.79, Training accuracy: 66.99%, Validation accuracy: 64.02%
+Test accuracy: 63.27% 
+[Epoch 8/20] Loss: 1.80, Training accuracy: 65.77%, Validation accuracy: 63.27%
+Test accuracy: 69.15% 
+[Epoch 9/20] Loss: 1.80, Training accuracy: 65.88%, Validation accuracy: 69.15%
+Test accuracy: 66.57% 
+[Epoch 10/20] Loss: 1.80, Training accuracy: 66.42%, Validation accuracy: 66.57%
+Test accuracy: 67.13% 
+[Epoch 11/20] Loss: 1.77, Training accuracy: 69.15%, Validation accuracy: 67.13%
+Test accuracy: 68.48% 
+[Epoch 12/20] Loss: 1.78, Training accuracy: 68.51%, Validation accuracy: 68.48%
+Test accuracy: 55.75% 
+[Epoch 13/20] Loss: 1.81, Training accuracy: 64.72%, Validation accuracy: 55.75%
+Test accuracy: 65.98% 
+[Epoch 14/20] Loss: 1.85, Training accuracy: 61.29%, Validation accuracy: 65.98%
+Test accuracy: 65.05% 
+[Epoch 15/20] Loss: 1.84, Training accuracy: 62.44%, Validation accuracy: 65.05%
+Test accuracy: 66.54% 
+[Epoch 16/20] Loss: 1.79, Training accuracy: 67.50%, Validation accuracy: 66.54%
+Test accuracy: 68.04% 
+[Epoch 17/20] Loss: 1.82, Training accuracy: 64.18%, Validation accuracy: 68.04%
+Test accuracy: 65.33% 
+[Epoch 18/20] Loss: 1.79, Training accuracy: 66.82%, Validation accuracy: 65.33%
+Test accuracy: 67.83% 
+[Epoch 19/20] Loss: 1.82, Training accuracy: 63.71%, Validation accuracy: 67.83%
+Test accuracy: 62.76% 
+[Epoch 20/20] Loss: 1.82, Training accuracy: 64.43%, Validation accuracy: 62.76%
+06 May 2024 01:21:25: Convolutional neural network training completed
+06 May 2024 01:21:25: Validating convolutional neural network...
+Test accuracy: 61.97% 
+06 May 2024 01:21:27: Convolutional neural network validation completed
+06 May 2024 01:21:27: Convolutional neural network model saved
+06 May 2024 01:21:28: Convolutional neural network example prediction
+06 May 2024 01:21:28: Training Graph neural network...
+Graph neural network has 126507 parameters
+Test accuracy: 20.52% 
+[Epoch 1/5] Loss: 2.25, Training accuracy: 20.89%, Validation accuracy: 20.52%
+Test accuracy: 31.57% 
+[Epoch 2/5] Loss: 2.21, Training accuracy: 25.27%, Validation accuracy: 31.57%
+Test accuracy: 32.61% 
+[Epoch 3/5] Loss: 2.18, Training accuracy: 27.77%, Validation accuracy: 32.61%
+Test accuracy: 33.84% 
+[Epoch 4/5] Loss: 2.13, Training accuracy: 33.29%, Validation accuracy: 33.84%
+Test accuracy: 35.05% 
+[Epoch 5/5] Loss: 2.13, Training accuracy: 32.67%, Validation accuracy: 35.05%
+06 May 2024 01:52:21: Graph neural network training completed
+06 May 2024 01:52:21: Validating geometric neural network...
+Test accuracy: 35.47% 
+06 May 2024 01:52:33: Graph neural network validation completed
+06 May 2024 01:52:33: Graph neural network model saved
+06 May 2024 01:52:34: Graph neural network example prediction
+06 May 2024 01:52:34: Completed programme

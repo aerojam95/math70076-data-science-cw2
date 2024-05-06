@@ -131,7 +131,7 @@ if __name__ == "__main__":
     ## Load data for DL methods
     
     # Transformations applied on each image => 
-    # first make them a tensor, then normalize them in the range -1 to 1
+    # first make them a tensor, then normalise them in the range -1 to 1
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
 
     # Loading the training dataset and split it into training and validation parts
@@ -154,8 +154,6 @@ if __name__ == "__main__":
     logProgress("Pre-processing image data...")
     trainImages = trainImages.reshape(trainImages.shape[0], -1) / pixels
     testImages = testImages.reshape(testImages.shape[0], -1) / pixels
-    print(trainImages.shape)
-    print(trainLabels.shape)
     
     # Take random samples here for later ML predictions
     randomIndices = [0, 1000]
@@ -171,6 +169,7 @@ if __name__ == "__main__":
     # Gaussian Naive-Bayes
     logProgress("Running Gaussian Naive-Bayes...")
     GNB = GaussianNaiveBayes(smoothing=1000.0)
+    print(f"Gaussian Naive-Bayes has {2 * numClasses + 1} parameters")
     GNB.train(trainImages, trainLabels)
     logProgress("Naive-Bayes completed")
     
@@ -189,7 +188,7 @@ if __name__ == "__main__":
     # k-Nearest neighbours
     logProgress("Training k-Nearest neighbours...")
     kNN = kNearestNeighbours(k=1, nSplits=10)
-    kNN.train(f"{outputFigPath}{loggingName}_{runNumber}_", trainImages, trainLabels, kmin=1, kmax=20)
+    kNN.train(f"{outputFigPath}{loggingName}_{runNumber}_", trainImages, trainLabels, kmin=1, kmax=10)
     logProgress("k-Nearest neighbours training completed")
     
     logProgress("Validating k-Nearest neighbours...")
@@ -207,8 +206,10 @@ if __name__ == "__main__":
     # Neural Network
     logProgress("Training neural network...")
     NN = NeuralNetwork(imageDimensions=imageDimensions, numClasses=numClasses)
+    NNParams = sum([p.numel() for p in NN.parameters()])
+    print(f"Neural network has {NNParams} parameters")
     optimizer = optim.Adam(NN.parameters(), lr=0.001)
-    NN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_", epochs=50)
+    NN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_nn_", epochs=20)
     logProgress("neural network training completed")
 
     logProgress("Validating neural network...")
@@ -219,15 +220,17 @@ if __name__ == "__main__":
     logProgress("Neural network model saved")
     
     predictionNN = NN.predict(testData.dataset[2000][0])
-    predictPlotter(testData.dataset[2000][0].squeeze(), testData.dataset[2000][1], predictionNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_NN.png")
+    predictPlotter(testData.dataset[2000][0].squeeze(), testData.dataset[2000][1], predictionNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_nn.png")
     logProgress("Neural network example prediction")
     
     
     # Convolutional neural network
     logProgress("Training convolutional neural network...")
     CNN = ConvolutionalNeuralNetwork()
+    CNNParams = sum([p.numel() for p in CNN.parameters()])
+    print(f"Convolutional neural network has {CNNParams} parameters")
     optimizer = optim.Adam(CNN.parameters(), lr=0.001)
-    CNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_", epochs=50)
+    CNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_cnn_", epochs=20)
     logProgress("Convolutional neural network training completed")
 
     logProgress("Validating convolutional neural network...")
@@ -238,15 +241,17 @@ if __name__ == "__main__":
     logProgress("Convolutional neural network model saved")
     
     predictionCNN = CNN.predict(testData.dataset[3000][0].unsqueeze(1))
-    predictPlotter(testData.dataset[3000][0].squeeze(), testData.dataset[3000][1], predictionCNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_CNN.png")
+    predictPlotter(testData.dataset[3000][0].squeeze(), testData.dataset[3000][1], predictionCNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_cnn.png")
     logProgress("Convolutional neural network example prediction")
     
     
     # Graph neural network 
     logProgress("Training Graph neural network...")
     GNN = GraphNeuralNetwork(imageDimensions=imageDimensions, numClasses=numClasses, predEdge=True)
+    GNNParams = sum([p.numel() for p in GNN.parameters()])
+    print(f"Graph neural network has {GNNParams} parameters")
     optimizer = optim.Adam(GNN.parameters(), lr=0.001)
-    GNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_", epochs=10)
+    GNN.trainModel(trainData, valData, criterion, optimizer, f"{outputFigPath}{loggingName}_{runNumber}_gnn_", epochs=5)
     logProgress("Graph neural network training completed")
 
     logProgress("Validating geometric neural network...")
@@ -257,7 +262,7 @@ if __name__ == "__main__":
     logProgress("Graph neural network model saved")
     
     predictionGNN = GNN.predict(testData.dataset[4000][0])
-    predictPlotter(testData.dataset[4000][0].squeeze(), testData.dataset[4000][1], predictionGNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_GNN.png")
+    predictPlotter(testData.dataset[4000][0].squeeze(), testData.dataset[4000][1], predictionGNN, classes, f"{outputValPath}{loggingName}_{runNumber}_prediction_gnn.png")
     logProgress("Graph neural network example prediction")
     
     #==========================================================================

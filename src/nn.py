@@ -83,7 +83,7 @@ class NeuralNetwork(Module):
         plt.xlabel("Epochs")
         plt.ylabel("Loss")
         plt.legend()
-        plt.savefig(f"{CurvePath}nn_training_curve.png")
+        plt.savefig(f"{CurvePath}training_curve.png")
         plt.close()
         return None
 

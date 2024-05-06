@@ -1,6 +1,6 @@
 {
-    "loggingName": "test_run",
-    "runNumber": "68",
+    "loggingName": "example",
+    "runNumber": "3",
     "dataPath": "../data/raw/",
     "outputFigPath": "../outputs/learning-curves/",
     "outputValPath": "../outputs/test-predictions/",
